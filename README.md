@@ -6,13 +6,9 @@ Basic rate-limiting middleware for Horse. Use to limit repeated requests to publ
 
 - Memory Store _(default, built-in)_ - stores hits in-memory in the Horse process. Does not share state with other servers or processes.
 
-### Alternate Rate-limiters
-
-This module was designed to only handle the basics and didn't even support external stores initially. These other options all are excellent pieces of software and may be more appropriate for some situations:
-
 ## Usage
 
-For an API-only server where the rate-limiter should be applied to all requests:
+For an API-only server where the ratelimit should be applied to all requests:
 
 ```delphi
 uses Horse, Horse.RateLimit;
@@ -25,8 +21,9 @@ begin
   
   RateLimit := THorseRateLimit.Create();
 
-  App.Get('/ping',
-    RateLimit.Limit,
+  App.Use(RateLimit.Limit)
+
+  App.Get('/ping',    
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('pong');
@@ -36,48 +33,52 @@ begin
 end.
 ```
 
-For a "regular" web server (e.g. anything that uses `express.static()`), where the rate-limiter should only apply to certain requests:
-
-```js
-const rateLimit = require("express-rate-limit");
-
-// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
-// see https://expressjs.com/en/guide/behind-proxies.html
-// app.set('trust proxy', 1);
-
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100
-});
-
-// only apply to requests that begin with /api/
-app.use("/api/", apiLimiter);
-```
-
 Create multiple instances to apply different rules to different routes:
 
-```js
-const rateLimit = require("express-rate-limit");
+```delphi
+uses Horse, Horse.RateLimit;
+  
+var
+  App: THorse;
+  RLPing: THorseRateLimit;
+  RLTest: THorseRateLimit;
+  Config: TRateLimitConfig;
+begin
+  App := THorse.Create(9000);
 
-// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
-// see https://expressjs.com/en/guide/behind-proxies.html
-// app.set('trust proxy', 1);
+  Config.Limit := 5; // Limit Request
+  Config.Timeout := 30; // Timeout in seconds
+  Config.Message := ''; // Message return
+  Config.Headers := True; // Show in Header X-Rate-Limit-*
+  Config.Store := nil; // Default TMemoryStore
+  Config.SkipFailedRequest := False; // Undo if the response request was failed
+  Config.SkipSuccessRequest := False; // Undo if the response request was successful
 
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100
-});
-app.use("/api/", apiLimiter);
+  RLPing := THorseRateLimit.Create(Config);
 
-const createAccountLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour window
-  max: 5, // start blocking after 5 requests
-  message:
-    "Too many accounts created from this IP, please try again after an hour"
-});
-app.post("/create-account", createAccountLimiter, function(req, res) {
-  //...
-});
+  App.Get('/ping',
+    RLPing.Limit,
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send('pong');
+    end);
+
+  // Max of 30 Request in 5 minutes with return custom message
+  Config.Limit := 30;
+  Config.Timeout := 5 * 60;
+  Config.Message := 'My Custom Message';
+  Config.Headers := True;
+
+  RLTest:= THorseRateLimit.Create(Config);
+  App.Get('/test',
+    RLTest.Limit,
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send('ok');
+    end);
+
+  App.Start;
+end.
 ```
 
 **Note:** most stores will require additional configuration, such as custom prefixes, when using multiple instances. The default built-in memory store is an exception to this rule.
