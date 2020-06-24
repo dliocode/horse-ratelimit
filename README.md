@@ -99,19 +99,19 @@ Note: with non-default stores, you may need to configure this value twice, once 
 
 Defaults to `60` (1 minute).
 
-### message
+### Message
 
 Error message sent to user when `Limit` is exceeded.
 
 It must be a string. The default is `'Too many requests, please try again later.'`.
 
-### headers
+### Headers
 
 Enable headers for request limit (`X-Rate-Limit-Limit`) and current usage (`X-Rate-Limit-Remaining`) on all responses and time to wait before retrying (`Retry-After`) when `Limit` is exceeded.
 
 Defaults to `false`. Behavior may change in the next major release.
 
-### skipFailedRequests
+### SkipFailedRequest
 
 When set to `true`, failed requests won't be counted. Request considered failed when:
 
@@ -121,7 +121,7 @@ When set to `true`, failed requests won't be counted. Request considered failed 
 
 Defaults to `false`.
 
-### skipSuccessRequests
+### SkipSuccessRequest
 
 When set to `true` successful requests (response status < 400) won't be counted.
 (Technically they are counted and then un-counted, so a large number of slow requests all at once could still trigger a rate-limit. This may be fixed in a future release.)
