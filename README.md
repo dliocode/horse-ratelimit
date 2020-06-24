@@ -83,93 +83,33 @@ end.
 
 **Note:** most stores will require additional configuration, such as custom prefixes, when using multiple instances. The default built-in memory store is an exception to this rule.
 
-## Request API
-
-A `req.rateLimit` property is added to all requests with the `limit`, `current`, and `remaining` number of requests and, if the store provides it, a `resetTime` Date object. These may be used in your application code to take additional actions or inform the user of their status.
-
 ## Configuration options
 
-### max
+### Limit
 
-Max number of connections during `windowMs` milliseconds before sending a 429 response.
+Max number of request during `Timeout` in seconds before sending a 429 response.
 
-May be a number, or a function that returns a number or a promise. If `max` is a function, it will be called with `req` and `res` params.
+It must be a number. The default is `10`.
 
-Defaults to `5`. Set to `0` to disable.
-
-### windowMs
+### Timeout
 
 Timeframe for which requests are checked/remembered. Also used in the Retry-After header when the limit is reached.
 
 Note: with non-default stores, you may need to configure this value twice, once here and once on the store. In some cases the units also differ (e.g. seconds vs miliseconds)
 
-Defaults to `60000` (1 minute).
+Defaults to `60` (1 minute).
 
 ### message
 
-Error message sent to user when `max` is exceeded.
+Error message sent to user when `Limit` is exceeded.
 
-May be a String, JSON object, or any other value that Express's [res.send](https://expressjs.com/en/4x/api.html#res.send) supports.
-
-Defaults to `'Too many requests, please try again later.'`
-
-### statusCode
-
-HTTP status code returned when `max` is exceeded.
-
-Defaults to `429`.
+It must be a string. The default is `'Too many requests, please try again later.'`.
 
 ### headers
 
-Enable headers for request limit (`X-RateLimit-Limit`) and current usage (`X-RateLimit-Remaining`) on all responses and time to wait before retrying (`Retry-After`) when `max` is exceeded.
+Enable headers for request limit (`X-Rate-Limit-Limit`) and current usage (`X-Rate-Limit-Remaining`) on all responses and time to wait before retrying (`Retry-After`) when `Limit` is exceeded.
 
-Defaults to `true`. Behavior may change in the next major release.
-
-### draft_polli_ratelimit_headers
-
-Enable headers conforming to the [ratelimit standardization proposal](https://tools.ietf.org/id/draft-polli-ratelimit-headers-01.html): `RateLimit-Limit`, `RateLimit-Remaining`, and, if the store supports it, `RateLimit-Reset`. May be used in conjunction with, or instead of the `headers` option.
-
-Defaults to `false`. Behavior and name will likely change in future releases.
-
-### keyGenerator
-
-Function used to generate keys.
-
-Defaults to req.ip:
-
-```js
-function (req /*, res*/) {
-    return req.ip;
-}
-```
-
-### handler
-
-The function to handle requests once the max limit is exceeded. It receives the request and the response objects. The "next" param is available if you need to pass to the next middleware.
-
-The`req.rateLimit` object has `limit`, `current`, and `remaining` number of requests and, if the store provides it, a `resetTime` Date object.
-
-Defaults to:
-
-```js
-function (req, res, /*next*/) {
-    res.status(options.statusCode).send(options.message);
-}
-```
-
-### onLimitReached
-
-Function that is called the first time a user hits the rate limit within a given window.
-
-The`req.rateLimit` object has `limit`, `current`, and `remaining` number of requests and, if the store provides it, a `resetTime` Date object.
-
-Default is an empty function:
-
-```js
-function (req, res, options) {
-  /* empty */
-}
-```
+Defaults to `false`. Behavior may change in the next major release.
 
 ### skipFailedRequests
 
@@ -183,7 +123,7 @@ When set to `true`, failed requests won't be counted. Request considered failed 
 
 Defaults to `false`.
 
-### skipSuccessfulRequests
+### skipSuccessRequests
 
 When set to `true` successful requests (response status < 400) won't be counted.
 (Technically they are counted and then un-counted, so a large number of slow requests all at once could still trigger a rate-limit. This may be fixed in a future release.)
