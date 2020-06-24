@@ -46,6 +46,7 @@ var
 begin
   App := THorse.Create(9000);
 
+  Config.Id := 'Ping'; // Identification
   Config.Limit := 5; // Limit Request
   Config.Timeout := 30; // Timeout in seconds
   Config.Message := ''; // Message return
@@ -64,6 +65,7 @@ begin
     end);
 
   // Max of 30 Request in 5 minutes with return custom message
+  Config.Id := 'Test';
   Config.Limit := 30;
   Config.Timeout := 5 * 60;
   Config.Message := 'My Custom Message';
@@ -85,11 +87,15 @@ end.
 
 ## Configuration options
 
+### Id
+ 
+RateLimite identification.
+
 ### Limit
 
 Max number of request during `Timeout` in seconds before sending a 429 response.
 
-It must be a number. The default is `10`.
+It must be a number. The default is `60`.
 
 ### Timeout
 
