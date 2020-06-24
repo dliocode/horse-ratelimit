@@ -145,7 +145,7 @@ You may also create your own store. It must implement the IRateLimitStore to fun
 
 ### v2 Changes
 
-v2 Added a feature of identification _(id)_
+- Added a feature of identification _(id)_
 
 ## License
 
