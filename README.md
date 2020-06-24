@@ -116,8 +116,6 @@ Defaults to `false`. Behavior may change in the next major release.
 When set to `true`, failed requests won't be counted. Request considered failed when:
 
 - response status >= 400
-- requests that were cancelled before last chunk of data was sent (response `close` event triggered)
-- response `error` event was triggrered by response
 
 (Technically they are counted and then un-counted, so a large number of slow requests all at once could still trigger a rate-limit. This may be fixed in a future release.)
 
@@ -130,100 +128,25 @@ When set to `true` successful requests (response status < 400) won't be counted.
 
 Defaults to `false`.
 
-### skip
-
-Function used to skip (whitelist) requests. Returning `true`, or a promise that resolves with `true`, from the function will skip limiting for that request.
-
-Defaults to always `false` (count all requests):
-
-```js
-function (/*req, res*/) {
-    return false;
-}
-```
-
-### store
+### Store
 
 The storage to use when persisting rate limit attempts.
 
-By default, the [MemoryStore](lib/memory-store.js) is used.
+By default, the MemoryStore is used.
 
 Available data stores are:
 
 - MemoryStore: _(default)_ Simple in-memory option. Does not share state when app has multiple processes or servers.
-- [rate-limit-redis](https://npmjs.com/package/rate-limit-redis): A [Redis](http://redis.io/)-backed store, more suitable for large or demanding deployments.
-- [rate-limit-memcached](https://npmjs.org/package/rate-limit-memcached): A [Memcached](https://memcached.org/)-backed store.
-- [rate-limit-mongo](https://www.npmjs.com/package/rate-limit-mongo): A [MongoDB](https://www.mongodb.com/)-backed store.
+- RedisStore: _(future release)_
 
-You may also create your own store. It must implement the following in order to function:
-
-```js
-function SomeStore() {
-  /**
-   * Increments the value in the underlying store for the given key.
-   * @method function
-   * @param {string} key - The key to use as the unique identifier passed
-   *                     down from RateLimit.
-   * @param {Function} cb - The callback issued when the underlying
-   *                                store is finished.
-   *
-   * The callback should be called with three values:
-   *  - error (usually null)
-   *  - hitCount for this IP
-   *  - resetTime - JS Date object (optional, but necessary for X-RateLimit-Reset header)
-   */
-  this.incr = function(key, cb) {
-    // increment storage
-    cb(null, hits, resetTime);
-  };
-
-  /**
-   * Decrements the value in the underlying store for the given key. Used only when skipFailedRequests is true
-   * @method function
-   * @param {string} key - The key to use as the unique identifier passed
-   *                     down from RateLimit.
-   */
-  this.decrement = function(key) {
-    // decrement storage
-  };
-
-  /**
-   * Resets a value with the given key.
-   * @method function
-   * @param  {[type]} key - The key to reset
-   */
-  this.resetKey = function(key) {
-    // remove key from storage or reset it to 0
-  };
-}
-```
-
-## Instance API
-
-### instance.resetKey(key)
-
-Resets the rate limiting for a given key. (Allow users to complete a captcha or whatever to reset their rate limit, then call this method.)
+You may also create your own store. It must implement the IRateLimitStore to function
 
 ## Summary of breaking changes:
 
-### v5 changes
-
-- Removed index.d.ts. (See [#138](https://github.com/nfriedly/express-rate-limit/issues/138))
-
-### v4 Changes
-
-- Express Rate Limit no longer modifies the passed-in options object, it instead makes a clone of it.
-
-### v3 Changes
-
-- Removed `delayAfter` and `delayMs` options; they were moved to a new module: [express-slow-down](https://npmjs.org/package/express-slow-down).
-- Simplified the default `handler` function so that it no longer changes the response format. Now uses [res.send](https://expressjs.com/en/4x/api.html#res.send).
-- `onLimitReached` now only triggers once for a given ip and window. only `handle` is called for every blocked request.
-
 ### v2 Changes
 
-v2 uses a less precise but less resource intensive method of tracking hits from a given IP. v2 also adds the `limiter.resetKey()` API and removes the `global: true` option.
+v2 Added a feature of identification _(id)_
 
 ## License
 
-MIT © [Nathan Friedly](http://nfriedly.com/)
+MIT © [Danilo Lucas](https://github.com/DaniloLucas-DLIO/)
