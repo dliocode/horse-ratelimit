@@ -2,6 +2,11 @@
 
 Basic rate-limiting middleware for Horse. Use to limit repeated requests to public APIs and/or endpoints such as password reset.
 
+### For install in your project using [boss](https://github.com/HashLoad/boss):
+``` sh
+$ boss install github.com/dliocode/horse-ratelimit
+```
+
 ### Stores
 
 - Memory Store _(default, built-in)_ - stores hits in-memory in the Horse process. Does not share state with other servers or processes.
