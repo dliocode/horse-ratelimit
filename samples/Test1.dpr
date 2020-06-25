@@ -30,7 +30,7 @@ begin
 
   RateLimit := THorseRateLimit.Create();
 
-  App.Use(RateLimit.Limit)
+  App.Use(RateLimit.Limit);
 
   App.Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
