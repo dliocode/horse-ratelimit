@@ -1,4 +1,4 @@
-# HorseRateLimit
+# Horse-RateLimit
 
 Basic rate-limiting middleware for Horse. Use to limit repeated requests to public APIs and/or endpoints such as password reset.
 
