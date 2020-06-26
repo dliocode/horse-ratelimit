@@ -154,10 +154,6 @@ You may also create your own store. It must implement the IRateLimitStore to fun
 
 ## Summary of breaking changes:
 
-### v2 Changes
-
-- Added a feature of identification _(id)_
-
 ## License
 
 MIT © [Danilo Lucas](https://github.com/DaniloLucas-DLIO/)
