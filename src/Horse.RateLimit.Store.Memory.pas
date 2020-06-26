@@ -87,7 +87,8 @@ procedure TMemoryDictionary.Add(const AName: string; const AValue: TMemory);
 begin
   FRW.BeginWrite;
   try
-    FDictionary.Add(AName, AValue);
+    if not FDictionary.ContainsKey(AName) then
+      FDictionary.Add(AName, AValue);
   finally
     FRW.EndWrite;
   end;
