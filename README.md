@@ -152,8 +152,6 @@ Available data stores are:
 
 You may also create your own store. It must implement the IRateLimitStore to function
 
-## Summary of breaking changes:
-
 ## License
 
 MIT © [Danilo Lucas](https://github.com/DaniloLucas-DLIO/)
