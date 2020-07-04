@@ -32,7 +32,7 @@ type
 
     property Config: TRateLimitConfig read FConfig write FConfig;
 
-    class function New(AConfig: TRateLimitConfig): TRateLimitManager; overload;
+    class function New(const AConfig: TRateLimitConfig): TRateLimitManager; overload;
     class function New(const AId: String; const ALimit, ATimeout: Integer; const AMessage: String): TRateLimitManager; overload;
     class procedure FinalizeInstance;
   end;
@@ -51,7 +51,7 @@ begin
   FDictionary.Free;
 end;
 
-class function TRateLimitManager.New(AConfig: TRateLimitConfig): TRateLimitManager;
+class function TRateLimitManager.New(const AConfig: TRateLimitConfig): TRateLimitManager;
 var
   LConfig: TRateLimitConfig;
 begin

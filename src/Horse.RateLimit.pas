@@ -24,6 +24,7 @@ type
     constructor Create(const AId: string; const ALimit, ATimeout: Integer; const AMessage: string); overload;
     destructor Destroy; override;
     procedure Limit(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+
     property Manager: TRateLimitManager read FConfig write FConfig;
 
     class function New(const AConfig: TRateLimitConfig): THorseRateLimit; overload;
@@ -77,9 +78,9 @@ var
   LConfig: TRateLimitConfig;
 begin
   if not(Assigned(FInstance))then
-    FInstance := THorseRateLimit.Create(AId, ALimit, ATimeout, AMessage);
-
-  FInstance.Manager := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage);
+    FInstance := THorseRateLimit.Create(AId, ALimit, ATimeout, AMessage)
+  else
+    FInstance.Manager := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage);
 
   if not(Assigned(FInstance.Manager.Config.Store))then
   begin
@@ -98,7 +99,7 @@ end;
 
 class function THorseRateLimit.New(): THorseRateLimit;
 begin
-  Result := New(DEFAULT_LIMIT, DEFAULT_TIMEOUT);
+  Result := New('');
 end;
 
 class procedure THorseRateLimit.FinalizeInstance;
@@ -128,9 +129,9 @@ var
   LMessage: string;
   FOptions: TRateLimitOptions;
 begin
-  LKey := ClientIP(Req);
+  LKey := 'RL'+Manager.Config.Id+ClientIP(Req);
 
-  LStoreCallback:= Manager.Config.Store.Incr(Manager.Config.Id+LKey);
+  LStoreCallback:= Manager.Config.Store.Incr(LKey);
 
   FOptions.Limit := Manager.Config.Limit;
   FOptions.Timeout := Manager.Config.Timeout;

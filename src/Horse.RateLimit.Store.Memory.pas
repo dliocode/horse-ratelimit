@@ -3,8 +3,8 @@ unit Horse.RateLimit.Store.Memory;
 interface
 
 uses
-  Horse.RateLimit.Store.Intf, Horse.RateLimit.Config, Horse.RateLimit.Memory,
-  System.StrUtils, System.Generics.Collections, System.SysUtils,
+  Horse.RateLimit.Store.Intf, Horse.RateLimit.Memory,
+  System.Generics.Collections, System.SysUtils,
   System.DateUtils;
 
 type
