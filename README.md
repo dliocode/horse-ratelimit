@@ -20,13 +20,10 @@ uses Horse, Horse.RateLimit;
   
 var
   App: THorse;
-  RateLimit: THorseRateLimit;
 begin
   App := THorse.Create(9000);
-  
-  RateLimit := THorseRateLimit.Create();
 
-  App.Use(RateLimit.Limit)
+  App.Use(THorseRateLimit.New().Limit)
 
   App.Get('/ping',    
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
@@ -38,32 +35,60 @@ begin
 end.
 ```
 
-Create multiple instances to apply different rules to different routes:
+Create multiple instances to different routes:
+*Identification should always be used when using multiple instances.*
 
 ```delphi
 uses Horse, Horse.RateLimit;
   
 var
   App: THorse;
-  RLPing: THorseRateLimit;
-  RLTest: THorseRateLimit;
+begin
+  App := THorse.Create(9000);
+
+  App.Get('/ping', THorseRateLimit.New('ping').limit,
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send('pong');
+    end);
+
+  App.Get('/book', THorseRateLimit.New('book').limit, 
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send('The book!');
+    end);
+
+  App.Get('/login', THorseRateLimit.New('login',10,60).limit,
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send('My Login with Request Max of 10 every 60 seconds!');
+    end);    
+
+  App.Start;
+end.
+```
+
+Settings use:
+
+```delphi
+uses Horse, Horse.RateLimit;
+  
+var
+  App: THorse;
   Config: TRateLimitConfig;
 begin
   App := THorse.Create(9000);
 
-  Config.Id := 'Ping'; // Identification
-  Config.Limit := 5; // Limit Request
-  Config.Timeout := 30; // Timeout in seconds
-  Config.Message := ''; // Message return
-  Config.Headers := True; // Show in Header X-Rate-Limit-*
-  Config.Store := nil; // Default TMemoryStore
-  Config.SkipFailedRequest := False; // Undo if the response request was failed
+  Config.Id := 'ping';                // Identification
+  Config.Limit := 5;                  // Limit Request
+  Config.Timeout := 30;               // Timeout in seconds
+  Config.Message := '';               // Message return
+  Config.Headers := True;             // Show in Header X-Rate-Limit-*
+  Config.Store := nil;                // Default TMemoryStore
+  Config.SkipFailedRequest := False;  // Undo if the response request was failed
   Config.SkipSuccessRequest := False; // Undo if the response request was successful
 
-  RLPing := THorseRateLimit.Create(Config);
-
-  App.Get('/ping',
-    RLPing.Limit,
+  App.Get('/ping', THorseRateLimit.New(Config).limit,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('pong');
@@ -76,9 +101,7 @@ begin
   Config.Message := 'My Custom Message';
   Config.Headers := True;
 
-  RLTest:= THorseRateLimit.Create(Config);
-  App.Get('/test',
-    RLTest.Limit,
+  App.Get('/test', THorseRateLimit.New(Config).limit,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('ok');
@@ -94,7 +117,7 @@ end.
 
 ### Id
  
-RateLimite identification.
+Identification should always be used when using multiple instances..
 
 ### Limit
 
@@ -118,7 +141,7 @@ It must be a string. The default is `'Too many requests, please try again later.
 
 ### Headers
 
-Enable headers for request limit (`X-Rate-Limit-Limit`) and current usage (`X-Rate-Limit-Remaining`) on all responses and time to wait before retrying (`Retry-After`) when `Limit` is exceeded.
+Enable headers for request limit (`X-RateLimit-Limit`) and current usage (`X-RateLimit-Remaining`) on all responses and time to wait before retrying (`Retry-After`) when `Limit` is exceeded.
 
 Defaults to `false`. Behavior may change in the next major release.
 

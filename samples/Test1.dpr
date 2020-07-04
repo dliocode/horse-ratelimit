@@ -17,6 +17,8 @@ uses
   Horse in 'modules\horse\src\Horse.pas',
   Horse.Router in 'modules\horse\src\Horse.Router.pas',
   Horse.WebModule in 'modules\horse\src\Horse.WebModule.pas' {HorseWebModule: TWebModule},
+  Horse.RateLimit.Config in '..\src\Horse.RateLimit.Config.pas',
+  Horse.RateLimit.Memory in '..\src\Horse.RateLimit.Memory.pas',
   Horse.RateLimit in '..\src\Horse.RateLimit.pas',
   Horse.RateLimit.Store.Intf in '..\src\Horse.RateLimit.Store.Intf.pas',
   Horse.RateLimit.Store.Memory in '..\src\Horse.RateLimit.Store.Memory.pas',
@@ -24,18 +26,15 @@ uses
 
 var
   App: THorse;
-  RateLimit: THorseRateLimit;
 begin
   App := THorse.Create(9000);
 
-  RateLimit := THorseRateLimit.Create();
+  App.Use(THorseRateLimit.New().limit);
 
-  App.Use(RateLimit.Limit);
-
-  App.Get('/ping',
+  App.Get('/login', THorseRateLimit.New('login',10,60).limit,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
-      Res.Send('pong');
+      Res.Send('My Login with Request Max of 10 every 60 seconds!');
     end);
 
   App.Start;

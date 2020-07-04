@@ -4,21 +4,23 @@
     <Transaction>2020/05/26 19:47:12.000.812,=C:\Users\danil\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2020/06/10 05:09:08.000.684,=C:\Users\danil\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2020/06/25 19:54:51.000.212,=C:\Users\danil\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2020/06/25 20:04:53.000.454,C:\Users\danil\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\Teste2.dproj</Transaction>
-    <Transaction>2020/06/25 20:05:02.000.241,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.Route.pas</Transaction>
-    <Transaction>2020/06/25 20:05:02.000.211,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.Route.Intf.pas</Transaction>
-    <Transaction>2020/06/25 20:05:02.000.406,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Router.pas</Transaction>
-    <Transaction>2020/06/25 20:05:02.000.273,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Exception.pas</Transaction>
+    <Transaction>2020/06/25 20:04:53.000.454,D:\DADOS\Projetos\Externos\HorseRateLimit\samples\Teste2.dproj=C:\Users\danil\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
     <Transaction>2020/06/25 20:05:02.000.371,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.pas</Transaction>
+    <Transaction>2020/06/25 20:05:02.000.406,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Router.pas</Transaction>
+    <Transaction>2020/06/25 20:05:02.000.211,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.Route.Intf.pas</Transaction>
     <Transaction>2020/06/25 20:05:02.000.176,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.pas</Transaction>
+    <Transaction>2020/06/25 20:05:02.000.241,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.Route.pas</Transaction>
+    <Transaction>2020/06/25 20:05:02.000.273,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Exception.pas</Transaction>
+    <Transaction>2020/06/25 20:05:02.000.146,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Constants.pas</Transaction>
     <Transaction>2020/06/25 20:05:02.000.309,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.HTTP.pas</Transaction>
     <Transaction>2020/06/25 20:05:02.000.111,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Commons.pas</Transaction>
     <Transaction>2020/06/25 20:05:02.000.339,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.ISAPI.pas</Transaction>
-    <Transaction>2020/06/25 20:05:02.000.146,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Constants.pas</Transaction>
     <Transaction>2020/06/25 20:05:04.000.093,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.WebModule.pas</Transaction>
-    <Transaction>2020/06/25 20:05:12.000.986,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Store.Intf.pas</Transaction>
     <Transaction>2020/06/25 20:05:12.000.954,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.pas</Transaction>
+    <Transaction>2020/06/25 20:05:12.000.986,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Store.Intf.pas</Transaction>
     <Transaction>2020/06/25 20:05:13.000.082,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Utils.pas</Transaction>
     <Transaction>2020/06/25 20:05:13.000.049,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Store.Memory.pas</Transaction>
+    <Transaction>2020/07/04 12:24:52.964,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Config.pas</Transaction>
+    <Transaction>2020/07/04 12:24:52.989,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Memory.pas</Transaction>
   </Transactions>
 </BorlandProject>

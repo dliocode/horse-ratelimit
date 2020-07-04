@@ -3,7 +3,7 @@ unit Horse.RateLimit.Store.Memory;
 interface
 
 uses
-  Horse.RateLimit.Store.Intf,
+  Horse.RateLimit.Store.Intf, Horse.RateLimit.Config, Horse.RateLimit.Memory,
   System.StrUtils, System.Generics.Collections, System.SysUtils,
   System.DateUtils;
 
@@ -13,27 +13,10 @@ type
     DateTime: TDateTime;
   end;
 
-  TMemoryDictionary = class
-  private
-    FRW: TMultiReadExclusiveWriteSynchronizer;
-    FDictionary: TDictionary<string, TMemory>;
-  public
-    constructor Create;
-    destructor Destroy; override;
-
-    procedure Clear;
-    procedure Remove(AKey: string);
-    procedure Add(const AName: string; const AValue: TMemory);
-    procedure AddOrSetValue(const AName: string; const AValue: TMemory);
-    function TryGetValue(const AName: string; out AValue: TMemory): Boolean;
-    function Count: Integer;
-    function Get:TDictionary<string, TMemory>;
-  end;
-
   TMemoryStore = class(TInterfacedObject, IRateLimitStore)
   private
     FTimeout: Integer;
-    FList: TMemoryDictionary;
+    FList: TMemoryDictionary<TMemory>;
     function ResetKey(ADateTime: TDateTime): Boolean;
     procedure CleanMemory;
   public
@@ -48,92 +31,11 @@ type
 
 implementation
 
-{ TMemoryDictionary }
-
-constructor TMemoryDictionary.Create;
-begin
-  FRW:= TMultiReadExclusiveWriteSynchronizer.Create;
-  FDictionary := TDictionary<string, TMemory>.Create;
-end;
-
-destructor TMemoryDictionary.Destroy;
-begin
-  FDictionary.Free;
-  FRW.Free;
-  inherited;
-end;
-
-procedure TMemoryDictionary.Clear;
-begin
-  FRW.BeginWrite;
-  try
-    FDictionary.Clear;
-  finally
-    FRW.EndWrite;
-  end;
-end;
-
-procedure TMemoryDictionary.Remove(AKey: string);
-begin
-  FRW.BeginWrite;
-  try
-    FDictionary.Remove(AKey);
-  finally
-    FRW.EndWrite;
-  end;
-end;
-
-procedure TMemoryDictionary.Add(const AName: string; const AValue: TMemory);
-begin
-  FRW.BeginWrite;
-  try
-    if not FDictionary.ContainsKey(AName) then
-      FDictionary.Add(AName, AValue);
-  finally
-    FRW.EndWrite;
-  end;
-end;
-
-procedure TMemoryDictionary.AddOrSetValue(const AName: string; const AValue: TMemory);
-begin
-  FRW.BeginWrite;
-  try
-    FDictionary.AddOrSetValue(AName, AValue);
-  finally
-    FRW.EndWrite;
-  end;
-end;
-
-function TMemoryDictionary.TryGetValue(const AName: string; out AValue: TMemory): Boolean;
-begin
-  FRW.BeginRead;
-  try
-    Result := FDictionary.TryGetValue(AName, AValue);
-  finally
-    FRW.EndRead;
-  end;
-end;
-
-function TMemoryDictionary.Count: Integer;
-begin
-  FRW.BeginRead;
-  try
-    Result := FDictionary.Count;
-  finally
-    FRW.EndRead;
-  end;
-end;
-
-function TMemoryDictionary.Get: TDictionary<string, TMemory>;
-begin
-  Result:= FDictionary;
-end;
-
 { TMemoryStore }
 
 constructor TMemoryStore.Create(ATimeout: Integer);
 begin
-  FList := TMemoryDictionary.Create;
+  FList := TMemoryDictionary<TMemory>.Create;
   FTimeout := ATimeout;
 end;
 

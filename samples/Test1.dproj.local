@@ -5,20 +5,22 @@
     <Transaction>2020/06/10 05:09:08.000.684,=C:\Users\danil\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2020/06/25 19:54:51.000.212,=C:\Users\danil\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2020/06/25 19:55:45.000.415,C:\Users\danil\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\Test1.dproj</Transaction>
-    <Transaction>2020/06/25 19:57:09.000.362,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.Route.pas</Transaction>
-    <Transaction>2020/06/25 19:57:09.000.333,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.Route.Intf.pas</Transaction>
-    <Transaction>2020/06/25 19:57:09.000.633,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Router.pas</Transaction>
     <Transaction>2020/06/25 19:57:09.000.392,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Exception.pas</Transaction>
+    <Transaction>2020/06/25 19:57:09.000.362,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.Route.pas</Transaction>
     <Transaction>2020/06/25 19:57:09.000.587,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.pas</Transaction>
-    <Transaction>2020/06/25 19:57:09.000.285,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.pas</Transaction>
-    <Transaction>2020/06/25 19:57:09.000.525,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.HTTP.pas</Transaction>
-    <Transaction>2020/06/25 19:57:09.000.222,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Commons.pas</Transaction>
+    <Transaction>2020/06/25 19:57:09.000.633,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Router.pas</Transaction>
+    <Transaction>2020/06/25 19:57:09.000.333,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.Route.Intf.pas</Transaction>
     <Transaction>2020/06/25 19:57:09.000.555,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.ISAPI.pas</Transaction>
+    <Transaction>2020/06/25 19:57:09.000.525,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.HTTP.pas</Transaction>
+    <Transaction>2020/06/25 19:57:09.000.285,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Core.pas</Transaction>
+    <Transaction>2020/06/25 19:57:09.000.222,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Commons.pas</Transaction>
     <Transaction>2020/06/25 19:57:09.000.253,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.Constants.pas</Transaction>
     <Transaction>2020/06/25 19:57:11.000.439,=D:\DADOS\Projetos\Externos\HorseRateLimit\samples\modules\horse\src\Horse.WebModule.pas</Transaction>
     <Transaction>2020/06/25 19:59:19.000.915,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Utils.pas</Transaction>
     <Transaction>2020/06/25 19:59:19.000.748,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.pas</Transaction>
     <Transaction>2020/06/25 19:59:19.000.844,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Store.Memory.pas</Transaction>
     <Transaction>2020/06/25 19:59:19.000.809,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Store.Intf.pas</Transaction>
+    <Transaction>2020/07/04 08:27:08.000.397,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Config.pas</Transaction>
+    <Transaction>2020/07/04 08:27:08.000.409,=D:\DADOS\Projetos\Externos\HorseRateLimit\src\Horse.RateLimit.Memory.pas</Transaction>
   </Transactions>
 </BorlandProject>
