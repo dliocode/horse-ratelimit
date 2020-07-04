@@ -9,7 +9,7 @@ $ boss install github.com/dliocode/horse-ratelimit
 
 ### Stores
 
-- Memory Store _(default, built-in)_ - stores hits in-memory in the Horse process. Does not share state with other servers or processes.
+- Memory Store _(default, built-in)_ - stores current in-memory in the Horse process. Does not share state with other servers or processes.
 
 ## Usage
 
@@ -177,4 +177,4 @@ You may also create your own store. It must implement the IRateLimitStore to fun
 
 ## License
 
-MIT © [Danilo Lucas](https://github.com/DaniloLucas-DLIO/)
+MIT © [Danilo Lucas](https://github.com/dliocode/)
