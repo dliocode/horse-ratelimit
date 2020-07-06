@@ -83,7 +83,7 @@ begin
   Config.Limit := 5;                  // Limit Request
   Config.Timeout := 30;               // Timeout in seconds
   Config.Message := '';               // Message return
-  Config.Headers := True;             // Show in Header X-Rate-Limit-*
+  Config.Headers := True;             // Show in Header X-RateLimit-*
   Config.Store := nil;                // Default TMemoryStore
   Config.SkipFailedRequest := False;  // Undo if the response request was failed
   Config.SkipSuccessRequest := False; // Undo if the response request was successful
