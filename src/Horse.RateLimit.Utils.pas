@@ -6,7 +6,7 @@ uses
   Horse.HTTP,
   System.SysUtils;
 
-function ClientIP(Req:THorseRequest): string;
+function ClientIP(Req: THorseRequest): string;
 
 implementation
 

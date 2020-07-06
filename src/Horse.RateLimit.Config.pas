@@ -43,7 +43,7 @@ implementation
 
 constructor TRateLimitManager.Create();
 begin
-  FDictionary:= TMemoryDictionary<TRateLimitConfig>.Create;
+  FDictionary := TMemoryDictionary<TRateLimitConfig>.Create;
 end;
 
 destructor TRateLimitManager.Destroy;
@@ -55,10 +55,10 @@ class function TRateLimitManager.New(const AConfig: TRateLimitConfig): TRateLimi
 var
   LConfig: TRateLimitConfig;
 begin
-  if not(Assigned(FInstance))then
+  if not(Assigned(FInstance)) then
     FInstance := TRateLimitManager.Create();
 
-  if not(FInstance.GetDictionary.TryGetValue(AConfig.Id, LConfig))then
+  if not(FInstance.GetDictionary.TryGetValue(AConfig.Id, LConfig)) then
   begin
     FInstance.GetDictionary.Add(AConfig.Id, AConfig);
     LConfig := AConfig;
@@ -73,18 +73,18 @@ class function TRateLimitManager.New(const AId: String; const ALimit, ATimeout: 
 var
   LConfig: TRateLimitConfig;
 begin
-  if not(Assigned(FInstance))then
+  if not(Assigned(FInstance)) then
     FInstance := TRateLimitManager.Create();
 
-  if not(FInstance.GetDictionary.TryGetValue(AId, LConfig))then
+  if not(FInstance.GetDictionary.TryGetValue(AId, LConfig)) then
   begin
-    LConfig.Id                 := AId;
-    LConfig.Limit              := ALimit;
-    LConfig.Timeout            := ATimeout;
-    LConfig.Message            := AMessage;
-    LConfig.Headers            := True;
-    LConfig.Store              := nil;
-    LConfig.SkipFailedRequest  := False;
+    LConfig.Id := AId;
+    LConfig.Limit := ALimit;
+    LConfig.Timeout := ATimeout;
+    LConfig.Message := AMessage;
+    LConfig.Headers := True;
+    LConfig.Store := nil;
+    LConfig.SkipFailedRequest := False;
     LConfig.SkipSuccessRequest := False;
 
     FInstance.GetDictionary.Add(AId, LConfig);
@@ -98,7 +98,7 @@ end;
 procedure TRateLimitManager.Save;
 begin
   GetDictionary.Remove(Config.Id);
-  GetDictionary.Add(Config.Id,Config);
+  GetDictionary.Add(Config.Id, Config);
 end;
 
 class procedure TRateLimitManager.FinalizeInstance;

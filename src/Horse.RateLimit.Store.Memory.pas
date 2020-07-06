@@ -48,7 +48,7 @@ function TMemoryStore.Incr(AKey: string): TRateLimitStoreCallback;
 var
   LMemory: TMemory;
 begin
-  if not(FList.TryGetValue(AKey, LMemory))then
+  if not(FList.TryGetValue(AKey, LMemory)) then
   begin
     LMemory.Count := 0;
     LMemory.DateTime := IncSecond(Now(), FTimeout);
@@ -56,7 +56,7 @@ begin
     FList.Add(AKey, LMemory);
   end;
 
-  if not(ResetKey(LMemory.DateTime))then
+  if not(ResetKey(LMemory.DateTime)) then
   begin
     Inc(LMemory.Count);
     FList.Remove(AKey);
@@ -81,11 +81,11 @@ begin
 
   FList.AddOrSetValue(AKey, LMemory);
 
-  if not(ResetKey(LMemory.DateTime))then
+  if not(ResetKey(LMemory.DateTime)) then
   begin
     Dec(LMemory.Count);
 
-    if(LMemory.Count < 0)then
+    if (LMemory.Count < 0) then
       LMemory.Count := 0;
 
     FList.Remove(AKey);
@@ -106,7 +106,7 @@ end;
 
 procedure TMemoryStore.SetTimeOut(ATimeout: Integer);
 begin
-  FTimeout:= ATimeout;
+  FTimeout := ATimeout;
 end;
 
 function TMemoryStore.ResetKey(ADateTime: TDateTime): Boolean;
@@ -119,7 +119,7 @@ var
   LList: TPair<string, TMemory>;
 begin
   for LList in FList.Get do
-    if ResetKey(LList.Value.DateTime)then
+    if ResetKey(LList.Value.DateTime) then
       FList.Remove(LList.Key);
 end;
 

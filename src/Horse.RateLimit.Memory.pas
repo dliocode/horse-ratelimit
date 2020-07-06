@@ -20,7 +20,7 @@ type
     procedure Add(const AName: string; const AValue: T);
     procedure AddOrSetValue(const AName: string; const AValue: T);
     function TryGetValue(const AName: string; out AValue: T): Boolean;
-    function Get:TDictionary<string, T>;
+    function Get: TDictionary<string, T>;
     function Count: Integer;
 
     class function New(): TMemoryDictionary<T>;
@@ -30,10 +30,9 @@ implementation
 
 { TMemoryDictionary<T> }
 
-
 constructor TMemoryDictionary<T>.Create;
 begin
-  FRW:= TMultiReadExclusiveWriteSynchronizer.Create;
+  FRW := TMultiReadExclusiveWriteSynchronizer.Create;
   FDictionary := TDictionary<string, T>.Create;
 end;
 
@@ -46,12 +45,11 @@ end;
 
 class function TMemoryDictionary<T>.New: TMemoryDictionary<T>;
 begin
-  if not(Assigned(FInstance))then
+  if not(Assigned(FInstance)) then
     FInstance := TMemoryDictionary<T>.Create;
 
   Result := FInstance;
 end;
-
 
 procedure TMemoryDictionary<T>.Clear;
 begin
@@ -108,7 +106,7 @@ function TMemoryDictionary<T>.Get: TDictionary<string, T>;
 begin
   FRW.BeginRead;
   try
-    Result:= FDictionary
+    Result := FDictionary
   finally
     FRW.EndRead;
   end;

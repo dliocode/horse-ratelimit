@@ -9,7 +9,7 @@ uses
   Web.HTTPApp;
 
 const
-  DEFAULT_LIMIT  = 60;
+  DEFAULT_LIMIT = 60;
   DEFAULT_TIMEOUT = 60;
 
 type
@@ -58,12 +58,12 @@ class function THorseRateLimit.New(const AConfig: TRateLimitConfig): THorseRateL
 var
   LConfig: TRateLimitConfig;
 begin
-  if not(Assigned(FInstance))then
+  if not(Assigned(FInstance)) then
     FInstance := THorseRateLimit.Create(AConfig);
 
   FInstance.Manager := TRateLimitManager.New(AConfig);
 
-  if not(Assigned(FInstance.Manager.Config.Store))then
+  if not(Assigned(FInstance.Manager.Config.Store)) then
   begin
     LConfig := FInstance.Manager.Config;
     LConfig.Store := TMemoryStore.Create(FInstance.Manager.Config.Timeout);
@@ -77,12 +77,12 @@ class function THorseRateLimit.New(const AId: string; const ALimit: Integer = DE
 var
   LConfig: TRateLimitConfig;
 begin
-  if not(Assigned(FInstance))then
+  if not(Assigned(FInstance)) then
     FInstance := THorseRateLimit.Create(AId, ALimit, ATimeout, AMessage)
   else
     FInstance.Manager := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage);
 
-  if not(Assigned(FInstance.Manager.Config.Store))then
+  if not(Assigned(FInstance.Manager.Config.Store)) then
   begin
     LConfig := FInstance.Manager.Config;
     LConfig.Store := TMemoryStore.Create(FInstance.Manager.Config.Timeout);
@@ -129,9 +129,9 @@ var
   LMessage: string;
   FOptions: TRateLimitOptions;
 begin
-  LKey := 'RL'+Manager.Config.Id+ClientIP(Req);
+  LKey := 'RL' + Manager.Config.Id + ClientIP(Req);
 
-  LStoreCallback:= Manager.Config.Store.Incr(LKey);
+  LStoreCallback := Manager.Config.Store.Incr(LKey);
 
   FOptions.Limit := Manager.Config.Limit;
   FOptions.Timeout := Manager.Config.Timeout;
@@ -143,20 +143,20 @@ begin
   FOptions.SkipFailedRequest := Manager.Config.SkipFailedRequest;
   FOptions.SkipSuccessRequest := Manager.Config.SkipSuccessRequest;
 
-  if(FOptions.Headers)then
+  if (FOptions.Headers) then
   begin
     LWebResponse := THorseHackResponse(Res).GetWebResponse;
     LWebResponse.SetCustomHeader('X-RateLimit-Limit', FOptions.Limit.ToString);
-    LWebResponse.SetCustomHeader('X-RateLimit-Remaining', FOptions.Remaining.toString);
+    LWebResponse.SetCustomHeader('X-RateLimit-Remaining', FOptions.Remaining.ToString);
     LWebResponse.SetCustomHeader('X-RateLimit-Reset', IntToStr(MillisecondOfTheDay(FOptions.ResetTime)));
   end;
 
-  if(FOptions.Current > FOptions.Limit)then
+  if (FOptions.Current > FOptions.Limit) then
   begin
     THorseHackResponse(Res).GetWebResponse.SetCustomHeader('Retry-After', IntToStr(FOptions.Timeout * 1000));
 
     LMessage := 'Too many requests, please try again later.';
-    LMessage := IfThen(FOptions.Message.Trim.IsEmpty, LMessage, FOptions.Message);
+    LMessage := Ifthen(FOptions.Message.Trim.IsEmpty, LMessage, FOptions.Message);
 
     Res.Send(LMessage).Status(THTTPStatus.TooManyRequests);
 
@@ -166,15 +166,15 @@ begin
   try
     Next;
   except
-    if not(FOptions.SkipFailedRequest)then
+    if not(FOptions.SkipFailedRequest) then
       Manager.Config.Store.Decrement(LKey);
     exit;
   end;
 
-  if(FOptions.SkipFailedRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode >= 400)then
+  if (FOptions.SkipFailedRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode >= 400) then
     Manager.Config.Store.Decrement(LKey);
 
-  if(FOptions.SkipSuccessRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode < 400)then
+  if (FOptions.SkipSuccessRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode < 400) then
     Manager.Config.Store.Decrement(LKey);
 
   Manager.Save;
