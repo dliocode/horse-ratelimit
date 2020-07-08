@@ -1,9 +1,9 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{1FE40FE7-F737-4B5D-972E-F0B043A6CE87}</ProjectGuid>
+        <ProjectGuid>{42C36B7B-814D-4461-A0A7-960402764E41}</ProjectGuid>
         <ProjectVersion>18.8</ProjectVersion>
         <FrameworkType>None</FrameworkType>
-        <MainSource>Model1.dpr</MainSource>
+        <MainSource>Model2.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -48,7 +48,7 @@
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
-        <SanitizedProjectName>Model1</SanitizedProjectName>
+        <SanitizedProjectName>Model2</SanitizedProjectName>
         <DCC_UnitSearchPath>modules\.dcp;modules\.dcu;modules;modules\delphiredisclient\samples\02JobQueue;modules\delphiredisclient\samples\03PubSub;modules\delphiredisclient\samples\99FireMonkeySample;modules\delphiredisclient\samples\Commons;modules\delphiredisclient\sources;modules\delphiredisclient\tests;modules\horse\src;modules\horse-ratelimit\src;modules\store\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -106,7 +106,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">Model1.dpr</Source>
+                    <Source Name="MainSource">Model2.dpr</Source>
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
@@ -125,9 +125,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\Model1.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\Model2.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>Model1.exe</RemoteName>
+                        <RemoteName>Model2.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
