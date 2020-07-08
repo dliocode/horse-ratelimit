@@ -207,8 +207,11 @@ How to configure host, port in Redis
 `TRedisStore.New('HOST','PORT','NAME CLIENTE')`
 
 1st Parameter - HOST - Default: `127.0.0.1`
+
 2st Parameter - PORT - Default: `6379`
+
 3st Parameter - ClientName - Default: `Empty`
+
 
 ## License
 
