@@ -13,7 +13,8 @@ $ boss install github.com/dliocode/horse-ratelimit
 
 ## Usage
 
-For an API-only server where the ratelimit should be applied to all requests:
+For an API-only server where the ratelimit should be applied to all requests: 
+Ex: _Store Memory_
 
 ```delphi
 uses Horse, Horse.RateLimit;
@@ -111,7 +112,7 @@ begin
 end.
 ```
 
-**Note:** most stores will require additional configuration, such as custom prefixes, when using multiple instances. The default built-in memory store is an exception to this rule.
+**Note:** Stores require additional configuration, such as custom prefixes, when using multiple instances.
 
 ## Configuration options
 
@@ -171,9 +172,43 @@ By default, the MemoryStore is used.
 Available data stores are:
 
 - MemoryStore: _(default)_ Simple in-memory option. Does not share state when app has multiple processes or servers.
-- RedisStore: _(future release)_
+- RedisStore: [Samples - Model 4](https://github.com/dliocode/horse-ratelimit/tree/master/samples/Model%204)
 
 You may also create your own store. It must implement the IRateLimitStore to function
+
+### Store Redis
+
+Usage:
+
+To use it you must add to uses `Store.Redis` with the function `TRedisStore.New()`.
+
+Ex: _Store Redis_
+```delphi
+uses Horse, Horse.RateLimit, Store.Redis;
+  
+var
+  App: THorse;
+begin
+  App := THorse.Create(9000);
+
+  App.Use(THorseRateLimit.New(10, 60, TRedisStore.New()).Limit);
+
+  App.Get('/ping',    
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send('pong');
+    end);
+    
+  App.Start;
+end.
+```
+
+How to configure host, port in Redis
+`TRedisStore.New('HOST','PORT','NAME CLIENTE')`
+
+1st Parameter - HOST - Default: `127.0.0.1`
+2st Parameter - PORT - Default: `6379`
+3st Parameter - ClientName - Default: `Empty`
 
 ## License
 
