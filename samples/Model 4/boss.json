@@ -1,0 +1,11 @@
+{
+	"name": "Model 4",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./",
+	"projects": [],
+	"dependencies": {
+		"github.com/dliocode/horse-ratelimit": "^1.1.4"
+	}
+}
