@@ -1,11 +1,11 @@
 {
-	"name": "Teste1",
+	"name": "Model 1",
 	"description": "",
 	"version": "1.0.0",
 	"homepage": "",
 	"mainsrc": "./",
 	"projects": [],
 	"dependencies": {
-		"github.com/hashload/horse": "^1.7.7"
+		"github.com/dliocode/horse-ratelimit": "^1.1.2"
 	}
 }

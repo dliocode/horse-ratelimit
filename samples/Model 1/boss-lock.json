@@ -1,7 +1,15 @@
 {
 	"hash": "d41d8cd98f00b204e9800998ecf8427e",
-	"updated": "2020-06-25T19:56:22.9871921-03:00",
+	"updated": "2020-07-08T13:20:28.2282158-03:00",
 	"installedModules": {
+		"github.com/dliocode/horse-ratelimit": {
+			"name": "horse-ratelimit",
+			"version": "1.1.2",
+			"hash": "aaea4d95eedf89a2c716189fe0c9e0af",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
 		"github.com/hashload/horse": {
 			"name": "horse",
 			"version": "1.7.7",
