@@ -4,7 +4,7 @@ interface
 
 uses
   Horse, Horse.Commons,
-  Horse.RateLimit.Config, Horse.RateLimit.Store.Intf, Horse.RateLimit.Store.Memory, Horse.RateLimit.Utils,
+  Horse.RateLimit.Config, Store.Intf, Store.Memory, Horse.RateLimit.Utils,
   System.StrUtils, System.SysUtils, System.DateUtils, System.Math,
   Web.HTTPApp;
 
@@ -21,15 +21,15 @@ type
     class var FInstance: THorseRateLimit;
   public
     constructor Create(const AConfig: TRateLimitConfig); overload;
-    constructor Create(const AId: string; const ALimit, ATimeout: Integer; const AMessage: string); overload;
+    constructor Create(const AId: string; const ALimit, ATimeout: Integer; const AMessage: string; const AStore: IStore); overload;
     destructor Destroy; override;
     procedure Limit(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
     property Manager: TRateLimitManager read FConfig write FConfig;
 
     class function New(const AConfig: TRateLimitConfig): THorseRateLimit; overload;
-    class function New(const AId: string; const ALimit: Integer = DEFAULT_LIMIT; const ATimeout: Integer = DEFAULT_TIMEOUT; const AMessage: string = ''): THorseRateLimit; overload;
-    class function New(const ALimit, ATimeout: Integer): THorseRateLimit; overload;
+    class function New(const AId: string; const ALimit: Integer = DEFAULT_LIMIT; const ATimeout: Integer = DEFAULT_TIMEOUT; const AMessage: string = ''; const AStore: IStore = nil): THorseRateLimit; overload;
+    class function New(const ALimit, ATimeout: Integer; const AStore: IStore = nil): THorseRateLimit; overload;
     class function New(): THorseRateLimit; overload;
     class procedure FinalizeInstance;
   end;
@@ -43,9 +43,9 @@ begin
   FConfig := TRateLimitManager.New(AConfig);
 end;
 
-constructor THorseRateLimit.Create(const AId: string; const ALimit, ATimeout: Integer; const AMessage: string);
+constructor THorseRateLimit.Create(const AId: string; const ALimit, ATimeout: Integer; const AMessage: string; const AStore: IStore);
 begin
-  FConfig := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage);
+  FConfig := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage, AStore);
 end;
 
 destructor THorseRateLimit.Destroy;
@@ -59,42 +59,46 @@ var
   LConfig: TRateLimitConfig;
 begin
   if not(Assigned(FInstance)) then
-    FInstance := THorseRateLimit.Create(AConfig);
-
-  FInstance.Manager := TRateLimitManager.New(AConfig);
+    FInstance := THorseRateLimit.Create(AConfig)
+  else
+    FInstance.Manager := TRateLimitManager.New(AConfig);
 
   if not(Assigned(FInstance.Manager.Config.Store)) then
   begin
     LConfig := FInstance.Manager.Config;
-    LConfig.Store := TMemoryStore.Create(FInstance.Manager.Config.Timeout);
+    LConfig.Store := TMemoryStore.New();
     FInstance.Manager.Config := LConfig;
   end;
+
+  FInstance.Manager.Config.Store.SetTimeout(FInstance.Manager.Config.Timeout);
 
   Result := FInstance;
 end;
 
-class function THorseRateLimit.New(const AId: string; const ALimit: Integer = DEFAULT_LIMIT; const ATimeout: Integer = DEFAULT_TIMEOUT; const AMessage: string = ''): THorseRateLimit;
+class function THorseRateLimit.New(const AId: string; const ALimit: Integer = DEFAULT_LIMIT; const ATimeout: Integer = DEFAULT_TIMEOUT; const AMessage: string = ''; const AStore: IStore = nil): THorseRateLimit;
 var
   LConfig: TRateLimitConfig;
 begin
   if not(Assigned(FInstance)) then
-    FInstance := THorseRateLimit.Create(AId, ALimit, ATimeout, AMessage)
+    FInstance := THorseRateLimit.Create(AId, ALimit, ATimeout, AMessage, AStore)
   else
-    FInstance.Manager := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage);
+    FInstance.Manager := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage, AStore);
 
   if not(Assigned(FInstance.Manager.Config.Store)) then
   begin
     LConfig := FInstance.Manager.Config;
-    LConfig.Store := TMemoryStore.Create(FInstance.Manager.Config.Timeout);
+    LConfig.Store := TMemoryStore.New();
     FInstance.Manager.Config := LConfig;
   end;
+
+  LConfig.Store.SetTimeout(FInstance.Manager.Config.Timeout);
 
   Result := FInstance;
 end;
 
-class function THorseRateLimit.New(const ALimit, ATimeout: Integer): THorseRateLimit;
+class function THorseRateLimit.New(const ALimit, ATimeout: Integer; const AStore: IStore = nil): THorseRateLimit;
 begin
-  Result := New('', ALimit, ATimeout, '');
+  Result := New('', ALimit, ATimeout, '', AStore);
 end;
 
 class function THorseRateLimit.New(): THorseRateLimit;
@@ -124,12 +128,12 @@ type
 
 var
   LWebResponse: TWebResponse;
-  LStoreCallback: TRateLimitStoreCallback;
+  LStoreCallback: TStoreCallback;
   LKey: string;
   LMessage: string;
   FOptions: TRateLimitOptions;
 begin
-  LKey := 'RL' + Manager.Config.Id + ClientIP(Req);
+  LKey := 'RL:' + Manager.Config.Id + ':' + ClientIP(Req);
 
   LStoreCallback := Manager.Config.Store.Incr(LKey);
 

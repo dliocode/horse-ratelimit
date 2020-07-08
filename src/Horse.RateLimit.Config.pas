@@ -3,7 +3,7 @@ unit Horse.RateLimit.Config;
 interface
 
 uses
-  Horse.RateLimit.Store.Intf, Horse.RateLimit.Memory,
+  Store.Intf, Store.Lib.Memory,
   System.SysUtils;
 
 type
@@ -13,7 +13,7 @@ type
     Timeout: Integer;
     Message: string;
     Headers: Boolean;
-    Store: IRateLimitStore;
+    Store: IStore;
     SkipFailedRequest: Boolean;
     SkipSuccessRequest: Boolean;
   end;
@@ -33,7 +33,7 @@ type
     property Config: TRateLimitConfig read FConfig write FConfig;
 
     class function New(const AConfig: TRateLimitConfig): TRateLimitManager; overload;
-    class function New(const AId: String; const ALimit, ATimeout: Integer; const AMessage: String): TRateLimitManager; overload;
+    class function New(const AId: String; const ALimit, ATimeout: Integer; const AMessage: String; const AStore: IStore): TRateLimitManager; overload;
     class procedure FinalizeInstance;
   end;
 
@@ -69,7 +69,7 @@ begin
   Result := FInstance;
 end;
 
-class function TRateLimitManager.New(const AId: String; const ALimit, ATimeout: Integer; const AMessage: String): TRateLimitManager;
+class function TRateLimitManager.New(const AId: String; const ALimit, ATimeout: Integer; const AMessage: String; const AStore: IStore): TRateLimitManager;
 var
   LConfig: TRateLimitConfig;
 begin
@@ -83,7 +83,7 @@ begin
     LConfig.Timeout := ATimeout;
     LConfig.Message := AMessage;
     LConfig.Headers := True;
-    LConfig.Store := nil;
+    LConfig.Store := AStore;
     LConfig.SkipFailedRequest := False;
     LConfig.SkipSuccessRequest := False;
 

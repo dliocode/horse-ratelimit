@@ -1,11 +1,27 @@
 {
 	"hash": "d41d8cd98f00b204e9800998ecf8427e",
-	"updated": "2020-06-26T11:46:39.3632529-03:00",
+	"updated": "2020-07-08T10:37:21.9559469-03:00",
 	"installedModules": {
 		"github.com/hashload/horse": {
 			"name": "horse",
 			"version": "1.7.7",
 			"hash": "b0bce44e36b320a8ca6bc864f137cb9d",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/danieleteti/delphiredisclient": {
+			"name": "delphiredisclient",
+			"version": "v2.0",
+			"hash": "6fd7a2a9ef8e9d639b5a9e845f634dcd",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/dliocode/store": {
+			"name": "store",
+			"version": "1.0.0",
+			"hash": "9b7aae2642ea3abd7458ce64506400d7",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
