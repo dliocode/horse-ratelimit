@@ -174,9 +174,9 @@ Available data stores are:
 - MemoryStore: _(default)_ Simple in-memory option. Does not share state when app has multiple processes or servers.
 - RedisStore: [Samples - Model 4](https://github.com/dliocode/horse-ratelimit/tree/master/samples/Model%204)
 
-You may also create your own store. It must implement the IRateLimitStore to function
+You may also create your own store. It must implement the IStore to function
 
-### Store Redis
+### Store with Redis
 
 Usage:
 
