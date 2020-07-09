@@ -10,6 +10,7 @@ $ boss install github.com/dliocode/horse-ratelimit
 ### Stores
 
 - Memory Store _(default, built-in)_ - stores current in-memory in the Horse process. Does not share state with other servers or processes.
+- RedisStore: [Samples - Model 4](https://github.com/dliocode/horse-ratelimit/tree/master/samples/Model%204)
 
 ## Usage
 
