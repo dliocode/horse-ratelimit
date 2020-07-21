@@ -172,7 +172,7 @@ begin
   except
     if not(FOptions.SkipFailedRequest) then
       Manager.Config.Store.Decrement(LKey);
-    exit;
+    raise;
   end;
 
   if (FOptions.SkipFailedRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode >= 400) then
