@@ -2,6 +2,8 @@
 
 ![](https://img.shields.io/github/stars/dliocode/horse-ratelimit.svg) ![](https://img.shields.io/github/forks/dliocode/horse-ratelimit.svg) ![](https://img.shields.io/github/tag/dliocode/horse-ratelimit.svg) ![](https://img.shields.io/github/release/dliocode/horse-ratelimit.svg) ![](https://img.shields.io/github/issues/dliocode/horse-ratelimit.svg)
 
+Support: developer.dlio@gmail.com
+
 Basic rate-limiting middleware for Horse. Use to limit repeated requests to public APIs and/or endpoints such as password reset.
 
 ### For install in your project using [boss](https://github.com/HashLoad/boss):
