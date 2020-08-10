@@ -91,7 +91,7 @@ begin
     FInstance.Manager.Config := LConfig;
   end;
 
-  LConfig.Store.SetTimeout(FInstance.Manager.Config.Timeout);
+  FInstance.Manager.Config.Store.SetTimeout(FInstance.Manager.Config.Timeout);
 
   Result := FInstance;
 end;
