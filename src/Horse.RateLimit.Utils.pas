@@ -41,10 +41,10 @@ begin
   if not THorseHackRequest(Req).GetWebRequest.RemoteIP.Trim.IsEmpty then
     Exit(THorseHackRequest(Req).GetWebRequest.RemoteIP.Trim);
 
-  if not THorseHackRequest(Req).GetWebRequest.RemoteAddr.Trim.IsEmpty then
+  if not Trim(THorseHackRequest(Req).GetWebRequest.RemoteAddr).IsEmpty then
     Exit(THorseHackRequest(Req).GetWebRequest.RemoteAddr.Trim);
 
-  if not THorseHackRequest(Req).GetWebRequest.RemoteHost.Trim.IsEmpty then
+  if not Trim(THorseHackRequest(Req).GetWebRequest.RemoteHost).IsEmpty then
     Exit(THorseHackRequest(Req).GetWebRequest.RemoteHost.Trim);
 end;
 
