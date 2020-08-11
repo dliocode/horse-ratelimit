@@ -16,36 +16,36 @@ var
 begin
   Result := EmptyStr;
 
-  if not Req.Headers['HTTP_CLIENT_IP'].Trim.IsEmpty then
-    Exit(Req.Headers['HTTP_CLIENT_IP'].Trim);
+  if not Trim(Req.Headers['HTTP_CLIENT_IP']).IsEmpty then
+    Exit(Trim(Req.Headers['HTTP_CLIENT_IP']));
 
-  for LIP in Req.Headers['HTTP_X_FORWARDED_FOR'].Trim.Split([',']) do
-    if not LIP.Trim.IsEmpty then
-      Exit(LIP.Trim);
+  for LIP in Trim(Req.Headers['HTTP_X_FORWARDED_FOR']).Split([',']) do
+    if not Trim(LIP).IsEmpty then
+      Exit(Trim(LIP));
 
-  if not Req.Headers['HTTP_X_FORWARDED'].Trim.IsEmpty then
-    Exit(Req.Headers['HTTP_X_FORWARDED'].Trim);
+  if not Trim(Req.Headers['HTTP_X_FORWARDED']).IsEmpty then
+    Exit(Trim(Req.Headers['HTTP_X_FORWARDED']));
 
-  if not Req.Headers['HTTP_X_CLUSTER_CLIENT_IP'].Trim.IsEmpty then
-    Exit(Req.Headers['HTTP_X_CLUSTER_CLIENT_IP'].Trim);
+  if not Trim(Req.Headers['HTTP_X_CLUSTER_CLIENT_IP']).IsEmpty then
+    Exit(Trim(Req.Headers['HTTP_X_CLUSTER_CLIENT_IP']));
 
-  if not Req.Headers['HTTP_FORWARDED_FOR'].Trim.IsEmpty then
-    Exit(Req.Headers['HTTP_FORWARDED_FOR'].Trim);
+  if not Trim(Req.Headers['HTTP_FORWARDED_FOR']).IsEmpty then
+    Exit(Trim(Req.Headers['HTTP_FORWARDED_FOR']));
 
-  if not Req.Headers['HTTP_FORWARDED'].Trim.IsEmpty then
-    Exit(Req.Headers['HTTP_FORWARDED'].Trim);
+  if not Trim(Req.Headers['HTTP_FORWARDED']).IsEmpty then
+    Exit(Trim(Req.Headers['HTTP_FORWARDED']));
 
-  if not Req.Headers['REMOTE_ADDR'].Trim.IsEmpty then
-    Exit(Req.Headers['REMOTE_ADDR'].Trim);
+  if not Trim(Req.Headers['REMOTE_ADDR']).IsEmpty then
+    Exit(Trim(Req.Headers['REMOTE_ADDR']));
 
-  if not THorseHackRequest(Req).GetWebRequest.RemoteIP.Trim.IsEmpty then
-    Exit(THorseHackRequest(Req).GetWebRequest.RemoteIP.Trim);
+  if not Trim(THorseHackRequest(Req).GetWebRequest.RemoteIP).IsEmpty then
+    Exit(Trim(THorseHackRequest(Req).GetWebRequest.RemoteIP));
 
   if not Trim(THorseHackRequest(Req).GetWebRequest.RemoteAddr).IsEmpty then
-    Exit(THorseHackRequest(Req).GetWebRequest.RemoteAddr.Trim);
+    Exit(Trim(THorseHackRequest(Req).GetWebRequest.RemoteAddr));
 
   if not Trim(THorseHackRequest(Req).GetWebRequest.RemoteHost).IsEmpty then
-    Exit(THorseHackRequest(Req).GetWebRequest.RemoteHost.Trim);
+    Exit(Trim(THorseHackRequest(Req).GetWebRequest.RemoteHost));
 end;
 
 end.
