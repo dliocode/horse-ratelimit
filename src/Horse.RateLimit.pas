@@ -170,8 +170,11 @@ begin
   try
     Next;
   except
-    if not(FOptions.SkipFailedRequest) then
+    if FOptions.SkipFailedRequest then
       Manager.Config.Store.Decrement(LKey);
+
+    Manager.Save;
+
     raise;
   end;
 
