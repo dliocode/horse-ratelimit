@@ -3,11 +3,8 @@ program Model3;
 uses Horse, Horse.RateLimit;
 
 var
-  App: THorse;
   Config: TRateLimitConfig;
 begin
-  App := THorse.Create(9000);
-
   Config.Id := 'ping';                // Identification
   Config.Limit := 5;                  // Limit Request
   Config.Timeout := 30;               // Timeout in seconds
@@ -17,7 +14,8 @@ begin
   Config.SkipFailedRequest := False;  // Undo if the response request was failed
   Config.SkipSuccessRequest := False; // Undo if the response request was successful
 
-  App.Get('/ping', THorseRateLimit.New(Config).limit,
+  THorse
+  .Get('/ping', THorseRateLimit.New(Config).limit,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('pong');
@@ -30,11 +28,11 @@ begin
   Config.Message := 'My Custom Message';
   Config.Headers := True;
 
-  App.Get('/test', THorseRateLimit.New(Config).limit,
+  THorse.Get('/test', THorseRateLimit.New(Config).limit,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('ok');
     end);
 
-  App.Start;
+  THorse.Listen(9000);
 end.

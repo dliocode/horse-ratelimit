@@ -4,16 +4,16 @@
 	"installedModules": {
 		"github.com/dliocode/horse-ratelimit": {
 			"name": "horse-ratelimit",
-			"version": "1.1.4",
-			"hash": "3827496855dc84a8ef71205ccf921d37",
+			"version": "1.2.0",
+			"hash": "3b720f680f3e4e76d6ff7eb30ee4691d",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
 		},
 		"github.com/hashload/horse": {
 			"name": "horse",
-			"version": "1.7.7",
-			"hash": "b0bce44e36b320a8ca6bc864f137cb9d",
+			"version": "v2.0.2",
+			"hash": "5c32de1d8aae94b0c88c40158dc01739",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
@@ -28,8 +28,8 @@
 		},
 		"https://github.com/dliocode/store": {
 			"name": "store",
-			"version": "1.0.0",
-			"hash": "9b7aae2642ea3abd7458ce64506400d7",
+			"version": "1.0.1",
+			"hash": "a4d89132d5824212de1abce4fa676be4",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
