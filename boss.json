@@ -6,7 +6,7 @@
 	"mainsrc": "./",
 	"projects": [],
 	"dependencies": {
-		"github.com/hashload/horse": "^1.7.7",
+		"github.com/hashload/horse": "^v2.0.2",
 		"https://github.com/dliocode/store": "^1.0.0"
 	}
 }
