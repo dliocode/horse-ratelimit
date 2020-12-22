@@ -4,8 +4,9 @@ interface
 
 uses
   Horse, Horse.Commons,
-  Horse.RateLimit.Config, Store.Intf, Store.Memory, Horse.RateLimit.Utils,
-  System.StrUtils, System.SysUtils, System.DateUtils, System.Math,
+  Horse.RateLimit.Config, Horse.RateLimit.Utils,
+  Store.Intf, Store.Memory,
+  System.StrUtils, System.SysUtils, System.DateUtils, System.Math, System.SyncObjs,
   Web.HTTPApp;
 
 const
@@ -16,103 +17,18 @@ type
   TRateLimitConfig = Horse.RateLimit.Config.TRateLimitConfig;
 
   THorseRateLimit = class
-  strict private
-    FConfig: TRateLimitManager;
-    class var FInstance: THorseRateLimit;
+  private
+    class var CriticalSection: TCriticalSection;
   public
-    constructor Create(const AConfig: TRateLimitConfig); overload;
-    constructor Create(const AId: string; const ALimit, ATimeout: Integer; const AMessage: string; const AStore: IStore); overload;
-    destructor Destroy; override;
-    procedure Limit(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-
-    property Manager: TRateLimitManager read FConfig write FConfig;
-
-    class function New(const AConfig: TRateLimitConfig): THorseRateLimit; overload;
-    class function New(const AId: string; const ALimit: Integer = DEFAULT_LIMIT; const ATimeout: Integer = DEFAULT_TIMEOUT; const AMessage: string = ''; const AStore: IStore = nil): THorseRateLimit; overload;
-    class function New(const ALimit, ATimeout: Integer; const AStore: IStore = nil): THorseRateLimit; overload;
-    class function New(): THorseRateLimit; overload;
-    class procedure FinalizeInstance;
+    class function New(const AConfig: TRateLimitConfig): THorseCallback; overload;
+    class function New(const AId: string = ''; const ALimit: Integer = DEFAULT_LIMIT; const ATimeout: Integer = DEFAULT_TIMEOUT; const AMessage: string = ''; const AStore: IStore = nil): THorseCallback; overload;
   end;
 
 implementation
 
 { THorseRateLimit }
 
-constructor THorseRateLimit.Create(const AConfig: TRateLimitConfig);
-begin
-  FConfig := TRateLimitManager.New(AConfig);
-end;
-
-constructor THorseRateLimit.Create(const AId: string; const ALimit, ATimeout: Integer; const AMessage: string; const AStore: IStore);
-begin
-  FConfig := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage, AStore);
-end;
-
-destructor THorseRateLimit.Destroy;
-begin
-  FConfig.Free;
-  inherited;
-end;
-
-class function THorseRateLimit.New(const AConfig: TRateLimitConfig): THorseRateLimit;
-var
-  LConfig: TRateLimitConfig;
-begin
-  if not(Assigned(FInstance)) then
-    FInstance := THorseRateLimit.Create(AConfig)
-  else
-    FInstance.Manager := TRateLimitManager.New(AConfig);
-
-  if not(Assigned(FInstance.Manager.Config.Store)) then
-  begin
-    LConfig := FInstance.Manager.Config;
-    LConfig.Store := TMemoryStore.New();
-    FInstance.Manager.Config := LConfig;
-  end;
-
-  FInstance.Manager.Config.Store.SetTimeout(FInstance.Manager.Config.Timeout);
-
-  Result := FInstance;
-end;
-
-class function THorseRateLimit.New(const AId: string; const ALimit: Integer = DEFAULT_LIMIT; const ATimeout: Integer = DEFAULT_TIMEOUT; const AMessage: string = ''; const AStore: IStore = nil): THorseRateLimit;
-var
-  LConfig: TRateLimitConfig;
-begin
-  if not(Assigned(FInstance)) then
-    FInstance := THorseRateLimit.Create(AId, ALimit, ATimeout, AMessage, AStore)
-  else
-    FInstance.Manager := TRateLimitManager.New(AId, ALimit, ATimeout, AMessage, AStore);
-
-  if not(Assigned(FInstance.Manager.Config.Store)) then
-  begin
-    LConfig := FInstance.Manager.Config;
-    LConfig.Store := TMemoryStore.New();
-    FInstance.Manager.Config := LConfig;
-  end;
-
-  FInstance.Manager.Config.Store.SetTimeout(FInstance.Manager.Config.Timeout);
-
-  Result := FInstance;
-end;
-
-class function THorseRateLimit.New(const ALimit, ATimeout: Integer; const AStore: IStore = nil): THorseRateLimit;
-begin
-  Result := New('', ALimit, ATimeout, '', AStore);
-end;
-
-class function THorseRateLimit.New(): THorseRateLimit;
-begin
-  Result := New('');
-end;
-
-class procedure THorseRateLimit.FinalizeInstance;
-begin
-  if Assigned(FInstance) then
-    FInstance.Free;
-end;
-
-procedure THorseRateLimit.Limit(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+class function THorseRateLimit.New(const AConfig: TRateLimitConfig): THorseCallback;
 type
   TRateLimitOptions = record
     Limit: Integer;
@@ -127,70 +43,114 @@ type
   end;
 
 var
-  LWebResponse: TWebResponse;
-  LStoreCallback: TStoreCallback;
-  LKey: string;
-  LMessage: string;
-  FOptions: TRateLimitOptions;
+  FManagerConfig: TRateLimitManager;
+  LConfig: TRateLimitConfig;
 begin
-  LKey := 'RL:' + Manager.Config.Id + ':' + ClientIP(Req);
+  FManagerConfig := TRateLimitManager.New(AConfig);
 
-  LStoreCallback := Manager.Config.Store.Incr(LKey);
-
-  FOptions.Limit := Manager.Config.Limit;
-  FOptions.Timeout := Manager.Config.Timeout;
-  FOptions.Message := Manager.Config.Message;
-  FOptions.Headers := Manager.Config.Headers;
-  FOptions.Current := LStoreCallback.Current;
-  FOptions.Remaining := Ifthen(Manager.Config.Limit < LStoreCallback.Current, 0, Manager.Config.Limit - LStoreCallback.Current);
-  FOptions.ResetTime := LStoreCallback.ResetTime;
-  FOptions.SkipFailedRequest := Manager.Config.SkipFailedRequest;
-  FOptions.SkipSuccessRequest := Manager.Config.SkipSuccessRequest;
-
-  if (FOptions.Headers) then
+  if not(Assigned(FManagerConfig.Config.Store)) then
   begin
-    LWebResponse := THorseHackResponse(Res).GetWebResponse;
-    LWebResponse.SetCustomHeader('X-RateLimit-Limit', FOptions.Limit.ToString);
-    LWebResponse.SetCustomHeader('X-RateLimit-Remaining', FOptions.Remaining.ToString);
-    LWebResponse.SetCustomHeader('X-RateLimit-Reset', IntToStr(MillisecondOfTheDay(FOptions.ResetTime)));
+    LConfig := FManagerConfig.Config;
+    LConfig.Store := TMemoryStore.New();
+
+    FManagerConfig.Config := LConfig;
   end;
 
-  if (FOptions.Current > FOptions.Limit) then
-  begin
-    THorseHackResponse(Res).GetWebResponse.SetCustomHeader('Retry-After', IntToStr(FOptions.Timeout * 1000));
+  FManagerConfig.Config.Store.SetTimeout(FManagerConfig.Config.Timeout);
 
-    LMessage := 'Too many requests, please try again later.';
-    LMessage := Ifthen(FOptions.Message.Trim.IsEmpty, LMessage, FOptions.Message);
+  Result :=
+      procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    var
+      LManagerConfig: TRateLimitManager;
+      LWebResponse: TWebResponse;
+      LStoreCallback: TStoreCallback;
+      LKey: string;
+      LMessage: string;
+      FOptions: TRateLimitOptions;
+    begin
+      CriticalSection.Enter;
+      try
+        LManagerConfig := TRateLimitManager.New(AConfig);
+      finally
+        CriticalSection.Leave;
+      end;
 
-    Res.Send(LMessage).Status(THTTPStatus.TooManyRequests);
+      LKey := 'RL:' + LManagerConfig.Config.Id + ':' + ClientIP(Req);
 
-    raise EHorseCallbackInterrupted.Create;
-  end;
+      LStoreCallback := LManagerConfig.Config.Store.Incr(LKey);
 
-  try
-    Next;
-  except
-    if FOptions.SkipFailedRequest then
-      Manager.Config.Store.Decrement(LKey);
+      FOptions.Limit := LManagerConfig.Config.Limit;
+      FOptions.Timeout := LManagerConfig.Config.Timeout;
+      FOptions.Message := LManagerConfig.Config.Message;
+      FOptions.Headers := LManagerConfig.Config.Headers;
+      FOptions.Current := LStoreCallback.Current;
+      FOptions.Remaining := Ifthen(LManagerConfig.Config.Limit < LStoreCallback.Current, 0, LManagerConfig.Config.Limit - LStoreCallback.Current);
+      FOptions.ResetTime := LStoreCallback.ResetTime;
+      FOptions.SkipFailedRequest := LManagerConfig.Config.SkipFailedRequest;
+      FOptions.SkipSuccessRequest := LManagerConfig.Config.SkipSuccessRequest;
 
-    Manager.Save;
+      if (FOptions.Headers) then
+      begin
+        LWebResponse := THorseHackResponse(Res).GetWebResponse;
+        LWebResponse.SetCustomHeader('X-RateLimit-Limit', FOptions.Limit.ToString);
+        LWebResponse.SetCustomHeader('X-RateLimit-Remaining', FOptions.Remaining.ToString);
+        LWebResponse.SetCustomHeader('X-RateLimit-Reset', IntToStr(MillisecondOfTheDay(FOptions.ResetTime)));
+      end;
 
-    raise;
-  end;
+      if (FOptions.Current > FOptions.Limit) then
+      begin
+        THorseHackResponse(Res).GetWebResponse.SetCustomHeader('Retry-After', IntToStr(FOptions.Timeout * 1000));
 
-  if (FOptions.SkipFailedRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode >= 400) then
-    Manager.Config.Store.Decrement(LKey);
+        LMessage := 'Too many requests, please try again later.';
+        LMessage := Ifthen(FOptions.Message.Trim.IsEmpty, LMessage, FOptions.Message);
 
-  if (FOptions.SkipSuccessRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode < 400) then
-    Manager.Config.Store.Decrement(LKey);
+        Res.Send(LMessage).Status(THTTPStatus.TooManyRequests);
 
-  Manager.Save;
+        raise EHorseCallbackInterrupted.Create;
+      end;
+
+      try
+        try
+          Next;
+        except
+          if FOptions.SkipFailedRequest then
+            LManagerConfig.Config.Store.Decrement(LKey);
+          raise;
+        end;
+
+        if (FOptions.SkipFailedRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode >= 400) then
+          LManagerConfig.Config.Store.Decrement(LKey);
+
+        if (FOptions.SkipSuccessRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode < 400) then
+          LManagerConfig.Config.Store.Decrement(LKey);
+      finally
+        LManagerConfig.Save;
+      end;
+    end;
+end;
+
+class function THorseRateLimit.New(const AId: string = ''; const ALimit: Integer = DEFAULT_LIMIT; const ATimeout: Integer = DEFAULT_TIMEOUT; const AMessage: string = ''; const AStore: IStore = nil): THorseCallback;
+var
+  LConfig: TRateLimitConfig;
+begin
+  LConfig.Id := AId;
+  LConfig.Limit := ALimit;
+  LConfig.Timeout := ATimeout;
+  LConfig.Message := AMessage;
+  LConfig.Headers := True;
+  LConfig.Store := AStore;
+  LConfig.SkipFailedRequest := False;
+  LConfig.SkipSuccessRequest := False;
+
+  Result := New(LConfig);
 end;
 
 initialization
 
+THorseRateLimit.CriticalSection := TCriticalSection.Create;
+
 finalization
 
-THorseRateLimit.FinalizeInstance;
+FreeAndNil(THorseRateLimit.CriticalSection);
 
 end.

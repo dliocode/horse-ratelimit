@@ -26,7 +26,7 @@ uses Horse, Horse.RateLimit;
 
 begin
   THorse
-  .Use(THorseRateLimit.New().Limit)
+  .Use(THorseRateLimit.New())
   .Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
@@ -45,19 +45,19 @@ uses Horse, Horse.RateLimit;
 
 begin
   THorse
-  .Get('/ping', THorseRateLimit.New('ping').limit,
+  .Get('/ping', THorseRateLimit.New('ping'),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('pong');
     end)
 
-  .Get('/book', THorseRateLimit.New('book').limit,
+  .Get('/book', THorseRateLimit.New('book'),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('The book!');
     end)
 
-  .Get('/login', THorseRateLimit.New('login',10,60).limit,
+  .Get('/login', THorseRateLimit.New('login',10,60),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('My Login with Request Max of 10 every 60 seconds!');
@@ -85,7 +85,7 @@ begin
   Config.SkipSuccessRequest := False; // Undo if the response request was successful
 
   THorse
-  .Get('/ping', THorseRateLimit.New(Config).limit,
+  .Get('/ping', THorseRateLimit.New(Config),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('pong');
@@ -98,7 +98,7 @@ begin
   Config.Message := 'My Custom Message';
   Config.Headers := True;
 
-  THorse.Get('/test', THorseRateLimit.New(Config).limit,
+  THorse.Get('/test', THorseRateLimit.New(Config),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('ok');
@@ -184,7 +184,7 @@ uses Horse, Horse.RateLimit, Store.Redis;
   
 begin
   THorse
-  .Use(THorseRateLimit.New(10, 60, TRedisStore.New()).Limit) // Add TRedisStore.New().Limit
+  .Use(THorseRateLimit.New('ping', 10, 60, TRedisStore.New())) // Add TRedisStore.New()
   .Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin

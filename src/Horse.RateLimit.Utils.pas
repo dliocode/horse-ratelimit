@@ -6,11 +6,11 @@ uses
   Horse.HTTP,
   System.SysUtils;
 
-function ClientIP(Req: THorseRequest): string;
+function ClientIP(const Req: THorseRequest): string;
 
 implementation
 
-function ClientIP(Req: THorseRequest): string;
+function ClientIP(const Req: THorseRequest): string;
 var
   LIP: string;
 begin
