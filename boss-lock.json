@@ -20,7 +20,7 @@
 		},
 		"https://github.com/dliocode/store": {
 			"name": "store",
-			"version": "2.0.0",
+			"version": "^2.0.0",
 			"hash": "a4fe3704877786c94a95cd1c8d1835af",
 			"artifacts": {},
 			"failed": false,
