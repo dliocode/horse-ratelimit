@@ -15,7 +15,7 @@ begin
   Config.SkipSuccessRequest := False; // Undo if the response request was successful
 
   THorse
-  .Get('/ping', THorseRateLimit.New(Config).limit,
+  .Get('/ping', THorseRateLimit.New(Config),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('pong');
@@ -28,7 +28,7 @@ begin
   Config.Message := 'My Custom Message';
   Config.Headers := True;
 
-  THorse.Get('/test', THorseRateLimit.New(Config).limit,
+  THorse.Get('/test', THorseRateLimit.New(Config),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('ok');

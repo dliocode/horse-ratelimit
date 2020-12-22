@@ -4,7 +4,7 @@ uses Horse, Horse.RateLimit;
 
 begin
   THorse
-  .Use(THorseRateLimit.New().Limit)
+  .Use(THorseRateLimit.New('ping',10))
   .Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin

@@ -4,7 +4,7 @@ uses Horse, Horse.RateLimit, Store.Redis;  // Add uses Store.Redis
 
 begin
   THorse
-  .Use(THorseRateLimit.New(10,60, TRedisStore.New()).Limit) // Add TRedisStore.New().Limit
+  .Use(THorseRateLimit.New('ping', 10, 60, '', TRedisStore.New())) // Add TRedisStore.New()
   .Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin

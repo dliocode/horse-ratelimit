@@ -6,7 +6,6 @@
 	"mainsrc": "./",
 	"projects": [],
 	"dependencies": {
-		"github.com/dliocode/horse-ratelimit": "^1.2.0",
-		"github.com/hashload/horse": "^v2.0.2"
+		"https://github.com/dliocode/horse-ratelimit": "^2.0.2"
 	}
 }
