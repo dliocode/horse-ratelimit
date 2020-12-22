@@ -184,7 +184,7 @@ uses Horse, Horse.RateLimit, Store.Redis;
   
 begin
   THorse
-  .Use(THorseRateLimit.New('ping', 10, 60, TRedisStore.New())) // Add TRedisStore.New()
+  .Use(THorseRateLimit.New('ping', 10, 60, '', TRedisStore.New())) // Add TRedisStore.New()
   .Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
