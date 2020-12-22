@@ -62,6 +62,8 @@ begin
   end;
 
   FManagerConfig.Config.Store.SetTimeout(FManagerConfig.Config.Timeout);
+  
+  FManagerConfig.Save;
 
   Result :=
       procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
