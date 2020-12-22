@@ -46,7 +46,12 @@ var
   FManagerConfig: TRateLimitManager;
   LConfig: TRateLimitConfig;
 begin
-  FManagerConfig := TRateLimitManager.New(AConfig);
+  CriticalSection.Enter;
+  try
+    FManagerConfig := TRateLimitManager.New(AConfig);
+  finally
+    CriticalSection.Leave;
+  end;
 
   if not(Assigned(FManagerConfig.Config.Store)) then
   begin

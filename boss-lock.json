@@ -4,8 +4,8 @@
 	"installedModules": {
 		"github.com/hashload/horse": {
 			"name": "horse",
-			"version": "1.7.7",
-			"hash": "b0bce44e36b320a8ca6bc864f137cb9d",
+			"version": "v2.0.6",
+			"hash": "cca1769dfab681cfd26ae8499f9045e1",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
@@ -20,8 +20,8 @@
 		},
 		"https://github.com/dliocode/store": {
 			"name": "store",
-			"version": "1.0.0",
-			"hash": "9b7aae2642ea3abd7458ce64506400d7",
+			"version": "2.0.0",
+			"hash": "a4fe3704877786c94a95cd1c8d1835af",
 			"artifacts": {},
 			"failed": false,
 			"changed": false

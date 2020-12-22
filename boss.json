@@ -7,6 +7,6 @@
 	"projects": [],
 	"dependencies": {
 		"github.com/hashload/horse": "^v2.0.2",
-		"https://github.com/dliocode/store": "^1.0.0"
+		"https://github.com/dliocode/store": "^2.0.0"
 	}
 }
