@@ -3,9 +3,8 @@ unit Horse.RateLimit;
 interface
 
 uses
-  Horse, Horse.Commons,
-  Horse.RateLimit.Config, Horse.Utils.ClientIP,
-  Store.Intf, Store.Memory,
+  Horse, Horse.Commons, Horse.Utils.ClientIP,
+  Store.Intf, Store.Memory, Store.Config,
   System.StrUtils, System.SysUtils, System.DateUtils, System.Math, System.SyncObjs,
   Web.HTTPApp;
 
@@ -14,7 +13,16 @@ const
   DEFAULT_TIMEOUT = 60;
 
 type
-  TRateLimitConfig = Horse.RateLimit.Config.TRateLimitConfig;
+  TRateLimitConfig = record
+    Id: string;
+    Limit: Integer;
+    Timeout: Integer;
+    Message: string;
+    Headers: Boolean;
+    Store: IStore;
+    SkipFailedRequest: Boolean;
+    SkipSuccessRequest: Boolean;
+  end;
 
   THorseRateLimit = class
   private
@@ -43,32 +51,31 @@ type
   end;
 
 var
-  FManagerConfig: TRateLimitManager;
+  LStoreConfig: TStoreConfig<TRateLimitConfig>;
   LConfig: TRateLimitConfig;
 begin
   CriticalSection.Enter;
   try
-    FManagerConfig := TRateLimitManager.New(AConfig);
+    LStoreConfig := TStoreConfig<TRateLimitConfig>.New(AConfig.Id, AConfig);
   finally
     CriticalSection.Leave;
   end;
 
-  if not(Assigned(FManagerConfig.Config.Store)) then
+  if not(Assigned(LStoreConfig.Config.Store)) then
   begin
-    LConfig := FManagerConfig.Config;
+    LConfig := LStoreConfig.Config;
     LConfig.Store := TMemoryStore.New();
 
-    FManagerConfig.Config := LConfig;
+    LStoreConfig.Config := LConfig;
   end;
 
-  FManagerConfig.Config.Store.SetTimeout(FManagerConfig.Config.Timeout);
-  
-  FManagerConfig.Save;
+  LStoreConfig.Config.Store.SetTimeout(LStoreConfig.Config.Timeout);
+  LStoreConfig.Save(LStoreConfig.Config.Id);
 
   Result :=
       procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     var
-      LManagerConfig: TRateLimitManager;
+      LManagerConfig: TStoreConfig<TRateLimitConfig>;
       LWebResponse: TWebResponse;
       LStoreCallback: TStoreCallback;
       LKey: string;
@@ -77,7 +84,7 @@ begin
     begin
       CriticalSection.Enter;
       try
-        LManagerConfig := TRateLimitManager.New(AConfig);
+        LManagerConfig := TStoreConfig<TRateLimitConfig>.New(AConfig.Id, AConfig);
       finally
         CriticalSection.Leave;
       end;
@@ -131,7 +138,7 @@ begin
         if (FOptions.SkipSuccessRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode < 400) then
           LManagerConfig.Config.Store.Decrement(LKey);
       finally
-        LManagerConfig.Save;
+        LManagerConfig.Save(LManagerConfig.Config.Id);
       end;
     end;
 end;
