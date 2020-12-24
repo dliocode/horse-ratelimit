@@ -1,6 +1,6 @@
 {
 	"hash": "d41d8cd98f00b204e9800998ecf8427e",
-	"updated": "2020-12-22T16:56:39.5413377-03:00",
+	"updated": "2020-12-24T17:33:50.9589402-03:00",
 	"installedModules": {
 		"github.com/hashload/horse": {
 			"name": "horse",
@@ -20,24 +20,24 @@
 		},
 		"https://github.com/dliocode/horse-ratelimit": {
 			"name": "horse-ratelimit",
-			"version": "2.0.3",
-			"hash": "3f2114324207727381344f48e63ab0a7",
+			"version": "2.0.4",
+			"hash": "4e1653f55e5e10c24b9c7bc6d8db0b90",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
 		},
 		"https://github.com/dliocode/horse-utils-clientip": {
 			"name": "horse-utils-clientip",
-			"version": "0.0.3",
-			"hash": "3e42ee357fc6d1b958c862b7a0918bac",
+			"version": "0.0.5",
+			"hash": "e70e774b0e0e7248d1e9028fc9c4542e",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
 		},
 		"https://github.com/dliocode/store": {
 			"name": "store",
-			"version": "2.0.1",
-			"hash": "ed6443c4fac6bb9f67215248b3a85f11",
+			"version": "2.0.2",
+			"hash": "e761bc2e0bf482271b9b8e9f8f133c35",
 			"artifacts": {},
 			"failed": false,
 			"changed": false

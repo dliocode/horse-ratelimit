@@ -1,26 +1,28 @@
 program Model2;
 
-uses Horse, Horse.RateLimit;
+uses
+  Horse, Horse.RateLimit;
 
 begin
   THorse
-  .Get('/ping', THorseRateLimit.New('ping'),
+    .Get('/ping', THorseRateLimit.New('ping'),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('pong');
     end)
 
-  .Get('/book', THorseRateLimit.New('book'),
+    .Get('/book', THorseRateLimit.New('book'),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('The book!');
     end)
 
-  .Get('/login', THorseRateLimit.New('login',10,60),
+    .Get('/login', THorseRateLimit.New('login', 10, 60),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('My Login with Request Max of 10 every 60 seconds!');
     end);
 
   THorse.Listen(9000);
+
 end.

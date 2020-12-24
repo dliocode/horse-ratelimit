@@ -1,9 +1,11 @@
 program Model3;
 
-uses Horse, Horse.RateLimit;
+uses
+  Horse, Horse.RateLimit;
 
 var
   Config: TRateLimitConfig;
+
 begin
   Config.Id := 'ping';                // Identification
   Config.Limit := 5;                  // Limit Request
@@ -15,7 +17,7 @@ begin
   Config.SkipSuccessRequest := False; // Undo if the response request was successful
 
   THorse
-  .Get('/ping', THorseRateLimit.New(Config),
+    .Get('/ping', THorseRateLimit.New(Config),
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send('pong');
@@ -35,4 +37,5 @@ begin
     end);
 
   THorse.Listen(9000);
+
 end.

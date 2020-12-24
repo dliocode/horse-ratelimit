@@ -1,6 +1,7 @@
 program Model4;
 
-uses Horse, Horse.RateLimit, Store.Redis;  // Add uses Store.Redis
+uses
+  Horse, Horse.RateLimit, Store.Redis;  // Add uses Store.Redis
 
 begin
   THorse
