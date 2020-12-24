@@ -30,4 +30,8 @@ package HorseRateLimit;
 requires
   rtl;
 
+contains
+  Horse.RateLimit.Config in 'src\Horse.RateLimit.Config.pas',
+  Horse.RateLimit in 'src\Horse.RateLimit.pas';
+
 end.

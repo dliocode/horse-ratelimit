@@ -4,7 +4,7 @@ interface
 
 uses
   Horse, Horse.Commons,
-  Horse.RateLimit.Config, Horse.RateLimit.Utils,
+  Horse.RateLimit.Config, Horse.Utils.ClientIP,
   Store.Intf, Store.Memory,
   System.StrUtils, System.SysUtils, System.DateUtils, System.Math, System.SyncObjs,
   Web.HTTPApp;
