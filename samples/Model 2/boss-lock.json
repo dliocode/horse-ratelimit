@@ -20,8 +20,16 @@
 		},
 		"https://github.com/dliocode/horse-ratelimit": {
 			"name": "horse-ratelimit",
-			"version": "2.0.2",
-			"hash": "84750d2ab3b7f10a701bbc5ae52160ba",
+			"version": "2.0.3",
+			"hash": "3f2114324207727381344f48e63ab0a7",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/dliocode/horse-utils-clientip": {
+			"name": "horse-utils-clientip",
+			"version": "0.0.3",
+			"hash": "3e42ee357fc6d1b958c862b7a0918bac",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
