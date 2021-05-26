@@ -52,21 +52,24 @@ type
 
 var
   LStoreConfig: TStoreConfig<TRateLimitConfig>;
+  LConfigStore: TRateLimitConfig;
   LConfig: TRateLimitConfig;
 begin
+  LConfig := AConfig;
+
   CriticalSection.Enter;
   try
-    LStoreConfig := TStoreConfig<TRateLimitConfig>.New(AConfig.Id, AConfig);
+    LStoreConfig := TStoreConfig<TRateLimitConfig>.New(LConfig.Id, LConfig);
   finally
     CriticalSection.Leave;
   end;
 
   if not(Assigned(LStoreConfig.Config.Store)) then
   begin
-    LConfig := LStoreConfig.Config;
-    LConfig.Store := TMemoryStore.New();
+    LConfigStore := LStoreConfig.Config;
+    LConfigStore.Store := TMemoryStore.New();
 
-    LStoreConfig.Config := LConfig;
+    LStoreConfig.Config := LConfigStore;
   end;
 
   LStoreConfig.Config.Store.SetTimeout(LStoreConfig.Config.Timeout);
@@ -84,7 +87,7 @@ begin
     begin
       CriticalSection.Enter;
       try
-        LManagerConfig := TStoreConfig<TRateLimitConfig>.New(AConfig.Id, AConfig);
+        LManagerConfig := TStoreConfig<TRateLimitConfig>.New(LConfig.Id, LConfig);
       finally
         CriticalSection.Leave;
       end;
@@ -105,7 +108,7 @@ begin
 
       if (FOptions.Headers) then
       begin
-        LWebResponse := THorseHackResponse(Res).GetWebResponse;
+        LWebResponse := Res.RawWebResponse;
         LWebResponse.SetCustomHeader('X-RateLimit-Limit', FOptions.Limit.ToString);
         LWebResponse.SetCustomHeader('X-RateLimit-Remaining', FOptions.Remaining.ToString);
         LWebResponse.SetCustomHeader('X-RateLimit-Reset', IntToStr(MillisecondOfTheDay(FOptions.ResetTime)));
@@ -113,7 +116,7 @@ begin
 
       if (FOptions.Current > FOptions.Limit) then
       begin
-        THorseHackResponse(Res).GetWebResponse.SetCustomHeader('Retry-After', IntToStr(FOptions.Timeout * 1000));
+        Res.RawWebResponse.SetCustomHeader('Retry-After', IntToStr(FOptions.Timeout * 1000));
 
         LMessage := 'Too many requests, please try again later.';
         LMessage := Ifthen(FOptions.Message.Trim.IsEmpty, LMessage, FOptions.Message);
@@ -132,10 +135,10 @@ begin
           raise;
         end;
 
-        if (FOptions.SkipFailedRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode >= 400) then
+        if (FOptions.SkipFailedRequest) and (Res.RawWebResponse.StatusCode >= 400) then
           LManagerConfig.Config.Store.Decrement(LKey);
 
-        if (FOptions.SkipSuccessRequest) and (THorseHackResponse(Req).GetWebResponse.StatusCode < 400) then
+        if (FOptions.SkipSuccessRequest) and (Res.RawWebResponse.StatusCode < 400) then
           LManagerConfig.Config.Store.Decrement(LKey);
       finally
         LManagerConfig.Save(LManagerConfig.Config.Id);
