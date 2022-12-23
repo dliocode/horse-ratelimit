@@ -17,11 +17,6 @@ $ boss install github.com/dliocode/horse-ratelimit
 - Memory Store _(default, built-in)_ - stores current in-memory in the Horse process. Does not share state with other servers or processes.
 - RedisStore: [Samples - Model 4](https://github.com/dliocode/horse-ratelimit/tree/master/samples/Model%204)
 
-
-### Donation
-
-If this project help you reduce time to develop, you can give me a cup of coffee :) <a href="https://www.paypal.com/donate?hosted_button_id=2T7W4PL7YGJZW" target="_blank" rel="noopener noreferrer"><img width="150" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"></a>
-
 ## Usage
 
 For an API-only server where the ratelimit should be applied to all requests: 
